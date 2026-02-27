@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block title %}Delete Document - DocuCollab{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 500px; margin: 3rem auto; border: 2px solid #e74c3c;">
+    <h3 style="color: #e74c3c;">Delete Document</h3>
+    
+    <div class="alert alert-error">
+        <strong>Warning!</strong> This action cannot be undone. You are about to permanently delete:
+    </div>
+    
+    <p style="background: #f9f9f9; padding: 1rem; border-radius: 4px; border-left: 4px solid #e74c3c;">
+        <strong>{{ document.title }}</strong><br>
+        <small>Owner: {{ document.owner.username }}</small><br>
+        <small>Created: {{ document.created_at|date:"Y-m-d H:i" }}</small>
+    </p>
+    
+    <p>Are you absolutely sure? This will permanently delete the document and all its versions.</p>
+    
+    <form method="post" style="display: flex; gap: 1rem;">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Yes, Delete Permanently</button>
+        <a href="{% url 'docs:document_detail' document.id %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

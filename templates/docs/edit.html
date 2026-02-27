@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Edit {{ document.title }} - DocuCollab{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>Edit: {{ document.title }}</h1>
+    <a href="{% url 'docs:document_detail' document.id %}" class="btn btn-secondary">Details</a>
+</div>
+
+<div class="document-info">
+    <p><strong>Owner:</strong> {{ document.owner.username }}</p>
+    <p><strong>Created:</strong> {{ document.created_at|date:"Y-m-d H:i" }}</p>
+    <p><strong>Last Modified:</strong> {{ document.updated_at|date:"Y-m-d H:i" }}</p>
+    <p><strong>File Type:</strong> <span class="badge">{{ document.get_file_type_display }}</span></p>
+</div>
+
+<div class="card">
+    <h3>Document Editor</h3>
+    
+    <!-- OnlyOffice Editor Placeholder -->
+    <div class="alert alert-info">
+        <strong>Note:</strong> To enable collaborative editing, install and configure OnlyOffice or Collabora:
+        <ul style="margin-top: 1rem; margin-left: 2rem;">
+            <li>OnlyOffice: <code>https://helpcenter.onlyoffice.com/installation/docs-developer-setup.aspx</code></li>
+            <li>Collabora: <code>https://www.collaboraoffice.com/</code></li>
+        </ul>
+        <p style="margin-top: 1rem;">Once configured, update ONLYOFFICE_URL and ONLYOFFICE_SECRET in settings.py</p>
+    </div>
+    
+    <!-- Document Editor Container -->
+    <div id="editor-container" style="width: 100%; height: 600px; border: 1px solid #ddd; border-radius: 4px; background: #f9f9f9; display: flex; align-items: center; justify-content: center;">
+        <p style="text-align: center; color: #7f8c8d;">
+            Editor will be loaded here when OnlyOffice is configured<br>
+            <small>Current document: {{ document.title }}</small>
+        </p>
+    </div>
+    
+    <!-- Fallback: Download and upload document -->
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 1px solid #ddd;">
+        <h4>Manual Editing (Alternative)</h4>
+        <p>Download the document, make changes locally, and upload the updated version.</p>
+        <div style="display: flex; gap: 1rem;">
+            <a href="{% url 'docs:download_document' document.id %}" class="btn btn-secondary">Download Current Version</a>
+        </div>
+    </div>
+</div>
+
+<!-- OnlyOffice SDK (uncomment when service is configured) -->
+<script src="https://documentserver.example.com/web-apps/apps/api/documents/api.js"></script>
+
+<script>
+    // OnlyOffice integration would go here
+    // var config = {{ config|safe }};
+    // Implementation pending OnlyOffice setup
+    
+    console.log('Edit mode for document: {{ document.title }}');
+    console.log('Document ID: {{ document.id }}');
+</script>
+{% endblock %}

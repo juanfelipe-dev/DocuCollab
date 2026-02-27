@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  # OnlyOffice Document Server
+  onlyoffice:
+    image: onlyoffice/documentserver:latest
+    container_name: docucollab-onlyoffice
+    ports:
+      - "8080:80"
+    environment:
+      - JWT_ENABLED=false
+    volumes:
+      - onlyoffice_data:/var/www/onlyoffice/Data
+    networks:
+      - docucollab-network
+
+  # PostgreSQL Database (optional, for production)
+  # postgres:
+  #   image: postgres:15
+  #   container_name: docucollab-postgres
+  #   environment:
+  #     POSTGRES_DB: docucollab
+  #     POSTGRES_USER: docucollab
+  #     POSTGRES_PASSWORD: your_password_here
+  #   volumes:
+  #     - postgres_data:/var/lib/postgresql/data
+  #   networks:
+  #     - docucollab-network
+
+volumes:
+  onlyoffice_data:
+  # postgres_data:
+
+networks:
+  docucollab-network:
+    driver: bridge

@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+
+{% block title %}{{ document.title }} Details - DocuCollab{% endblock %}
+
+{% block content %}
+<div class="header">
+    <h1>{{ document.title }}</h1>
+    <div style="display: flex; gap: 1rem;">
+        <a href="{% url 'docs:view_document' document.id %}" class="btn btn-secondary">View</a>
+        {% if user == document.owner or user.is_superuser %}
+            <a href="{% url 'docs:edit_document' document.id %}" class="btn btn-secondary">Edit</a>
+        {% endif %}
+        <a href="{% url 'docs:download_document' document.id %}" class="btn btn-success">Download</a>
+        <a href="{% url 'docs:docs_list' %}" class="btn btn-secondary">Back</a>
+    </div>
+</div>
+
+<!-- Document Information -->
+<div class="card">
+    <h3>Document Information</h3>
+    <table style="width: 100%;">
+        <tr>
+            <td><strong>Title:</strong></td>
+            <td>{{ document.title }}</td>
+        </tr>
+        <tr>
+            <td><strong>Owner:</strong></td>
+            <td>{{ document.owner.username }}</td>
+        </tr>
+        <tr>
+            <td><strong>File Type:</strong></td>
+            <td><span class="badge {% if document.file_type == 'docx' %}badge-docx{% else %}badge-xlsx{% endif %}">{{ document.get_file_type_display }}</span></td>
+        </tr>
+        <tr>
+            <td><strong>File Size:</strong></td>
+            <td>{{ document.get_file_size_mb }} MB</td>
+        </tr>
+        <tr>
+            <td><strong>Created:</strong></td>
+            <td>{{ document.created_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        <tr>
+            <td><strong>Last Modified:</strong></td>
+            <td>{{ document.updated_at|date:"Y-m-d H:i" }}</td>
+        </tr>
+        {% if document.last_modified_by %}
+        <tr>
+            <td><strong>Modified By:</strong></td>
+            <td>{{ document.last_modified_by.username }}</td>
+        </tr>
+        {% endif %}
+        {% if document.description %}
+        <tr>
+            <td><strong>Description:</strong></td>
+            <td>{{ document.description }}</td>
+        </tr>
+        {% endif %}
+    </table>
+</div>
+
+<!-- Permissions -->
+{% if can_manage %}
+<div class="card">
+    <h3>Access & Permissions</h3>
+    {% if permissions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>User</th>
+                    <th>Permission</th>
+                    <th>Granted At</th>
+                    <th>Granted By</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for perm in permissions %}
+                <tr>
+                    <td>{{ perm.user.username }}</td>
+                    <td>
+                        <span class="badge">{{ perm.get_permission_type_display }}</span>
+                    </td>
+                    <td>{{ perm.granted_at|date:"Y-m-d" }}</td>
+                    <td>{{ perm.granted_by.username }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No additional permissions granted. Only the owner can access this document.</p>
+    {% endif %}
+    
+    <div style="margin-top: 1.5rem;">
+        <a href="{% url 'docs:manage_permissions' document.id %}" class="btn btn-secondary">Manage Permissions</a>
+    </div>
+</div>
+{% endif %}
+
+<!-- Versions -->
+<div class="card">
+    <h3>Document Versions</h3>
+    {% if versions %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Version</th>
+                    <th>Created By</th>
+                    <th>Created At</th>
+                    <th>Summary</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for version in versions %}
+                <tr>
+                    <td><strong>v{{ version.version_number }}</strong></td>
+                    <td>{{ version.created_by.username }}</td>
+                    <td>{{ version.created_at|date:"Y-m-d H:i" }}</td>
+                    <td>{{ version.change_summary|default:"No summary" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>Version history not available yet.</p>
+    {% endif %}
+</div>
+
+<!-- Actions -->
+{% if can_manage %}
+<div class="card">
+    <h3>Danger Zone</h3>
+    <p>Careful! These actions cannot be undone.</p>
+    <a href="{% url 'docs:delete_document' document.id %}" class="btn btn-danger">Delete This Document</a>
+</div>
+{% endif %}
+{% endblock %}

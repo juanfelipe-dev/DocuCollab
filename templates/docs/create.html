@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Create Document - DocuCollab{% endblock %}
+
+{% block content %}
+<h1>Create New Document</h1>
+
+<div class="card" style="max-width: 600px;">
+    <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">Title:</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+                <div class="alert alert-error">{{ form.title.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">Description:</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+                <div class="alert alert-error">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.file.id_for_label }}">Document File (docx or xlsx):</label>
+            {{ form.file }}
+            <small style="color: #7f8c8d;">Accepted formats: .docx (Word), .xlsx (Excel)</small>
+            {% if form.file.errors %}
+                <div class="alert alert-error">{{ form.file.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div style="display: flex; gap: 1rem;">
+            <button type="submit" class="btn btn-success">Upload Document</button>
+            <a href="{% url 'docs:docs_list' %}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
