@@ -39,13 +39,13 @@
           <h1 class="card-title text-center mb-4">Login</h1>
           <form method="post" autocomplete="off">
             {% csrf_token %}
-            <div class="mb-3">
+            <div class="mb-3 w-100">
               <label for="id_username" class="form-label">Username</label>
-              {{ form.username }}
+              <input type="text" name="username" id="id_username" class="form-control" required autofocus value="{{ form.username.value|default_if_none:'' }}">
             </div>
-            <div class="mb-3">
+            <div class="mb-3 w-100">
               <label for="id_password" class="form-label">Password</label>
-              {{ form.password }}
+              <input type="password" name="password" id="id_password" class="form-control" required value="{{ form.password.value|default_if_none:'' }}">
             </div>
             {% if form.non_field_errors %}
               <div class="alert alert-danger">
