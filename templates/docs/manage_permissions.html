@@ -3,94 +3,46 @@
 {% block title %}Manage Permissions - DocuCollab{% endblock %}
 
 {% block content %}
-<div class="header">
-    <h1>Manage Permissions: {{ document.title }}</h1>
-    <a href="{% url 'docs:document_detail' document.id %}" class="btn btn-secondary">Back to Document</a>
-</div>
-
-<div class="card">
-    <h3>Current Access</h3>
-    
-    {% if permissions %}
-        <table class="table">
-            <thead>
-                <tr>
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <div class="card shadow-sm">
+        <div class="card-header bg-info text-white">
+          <h2 class="mb-0">Manage Permissions for <span class="text-dark">{{ document.title }}</span></h2>
+        </div>
+        <div class="card-body">
+          <form method="post">
+            {% csrf_token %}
+            <div class="table-responsive mb-3">
+              <table class="table table-bordered align-middle">
+                <thead class="table-light">
+                  <tr>
                     <th>User</th>
-                    <th>Permission Level</th>
-                    <th>Granted At</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for perm in permissions %}
-                <tr>
+                    <th>Can View</th>
+                    <th>Can Edit</th>
+                    <th>Can Delete</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {% for perm in permissions %}
+                  <tr>
                     <td>{{ perm.user.username }}</td>
-                    <td>
-                        <span class="badge">{{ perm.get_permission_type_display }}</span>
-                    </td>
-                    <td>{{ perm.granted_at|date:"Y-m-d" }}</td>
-                    <td>
-                        <button class="btn btn-danger btn-small" onclick="revokePermission({{ perm.id }})">
-                            Revoke
-                        </button>
-                    </td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p><em>No permissions granted. Only the owner can access this document.</em></p>
-    {% endif %}
-</div>
-
-<div class="card">
-    <h3>Grant New Access</h3>
-    
-    <p>Share this document with other users by granting them access permissions.</p>
-    
-    <div class="alert alert-info">
-        <strong>Permission Levels:</strong>
-        <ul style="margin-top: 0.5rem; margin-left: 2rem;">
-            <li><strong>View Only:</strong> Can view and download the document</li>
-            <li><strong>Edit:</strong> Can view, download, and edit the document</li>
-            <li><strong>Manage:</strong> Can view, download, edit, and manage permissions (coming soon)</li>
-        </ul>
+                    <td><input type="checkbox" name="view_{{ perm.user.id }}" {% if perm.can_view %}checked{% endif %} class="form-check-input"></td>
+                    <td><input type="checkbox" name="edit_{{ perm.user.id }}" {% if perm.can_edit %}checked{% endif %} class="form-check-input"></td>
+                    <td><input type="checkbox" name="delete_{{ perm.user.id }}" {% if perm.can_delete %}checked{% endif %} class="form-check-input"></td>
+                  </tr>
+                  {% endfor %}
+                </tbody>
+              </table>
+            </div>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="{% url 'docs:detail_document' document.id %}" class="btn btn-link">Cancel</a>
+              <button type="submit" class="btn btn-info text-white">Save Permissions</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    
-    <form method="post" style="background: #f9f9f9; padding: 1.5rem; border-radius: 4px;">
-        {% csrf_token %}
-        
-        <div class="form-group">
-            <label for="user">Select User:</label>
-            <select id="user" class="form-control" required>
-                <option value="">-- Select a user --</option>
-                <!-- Users will be populated here -->
-            </select>
-        </div>
-        
-        <div class="form-group">
-            <label for="permission">Permission Level:</label>
-            <select id="permission" class="form-control" required>
-                <option value="view">View Only</option>
-                <option value="edit">Edit</option>
-                <option value="manage">Manage</option>
-            </select>
-        </div>
-        
-        <button type="submit" class="btn btn-success">Grant Access</button>
-    </form>
-    
-    <p style="margin-top: 1rem; color: #7f8c8d; font-size: 0.9rem;">
-        <em>Coming Soon: Integration to select users from the system and manage permissions through the UI.</em>
-    </p>
+  </div>
 </div>
-
-<script>
-    function revokePermission(permissionId) {
-        if (confirm('Are you sure you want to revoke this permission?')) {
-            // TODO: Implement permission revocation via AJAX
-            alert('Permission revocation - coming soon!');
-        }
-    }
-</script>
 {% endblock %}

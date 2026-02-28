@@ -3,25 +3,26 @@
 {% block title %}Delete Document - DocuCollab{% endblock %}
 
 {% block content %}
-<div class="card" style="max-width: 500px; margin: 3rem auto; border: 2px solid #e74c3c;">
-    <h3 style="color: #e74c3c;">Delete Document</h3>
-    
-    <div class="alert alert-error">
-        <strong>Warning!</strong> This action cannot be undone. You are about to permanently delete:
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-lg-6">
+      <div class="card shadow-sm border-danger">
+        <div class="card-header bg-danger text-white">
+          <h2 class="mb-0">Delete Document</h2>
+        </div>
+        <div class="card-body">
+          <p class="lead">Are you sure you want to delete the document <strong>{{ document.title }}</strong>?</p>
+          <p class="text-muted">This action cannot be undone.</p>
+          <form method="post">
+            {% csrf_token %}
+            <div class="d-flex justify-content-between align-items-center mt-4">
+              <a href="{% url 'docs:detail_document' document.id %}" class="btn btn-link">Cancel</a>
+              <button type="submit" class="btn btn-danger">Delete</button>
+            </div>
+          </form>
+        </div>
+      </div>
     </div>
-    
-    <p style="background: #f9f9f9; padding: 1rem; border-radius: 4px; border-left: 4px solid #e74c3c;">
-        <strong>{{ document.title }}</strong><br>
-        <small>Owner: {{ document.owner.username }}</small><br>
-        <small>Created: {{ document.created_at|date:"Y-m-d H:i" }}</small>
-    </p>
-    
-    <p>Are you absolutely sure? This will permanently delete the document and all its versions.</p>
-    
-    <form method="post" style="display: flex; gap: 1rem;">
-        {% csrf_token %}
-        <button type="submit" class="btn btn-danger">Yes, Delete Permanently</button>
-        <a href="{% url 'docs:document_detail' document.id %}" class="btn btn-secondary">Cancel</a>
-    </form>
+  </div>
 </div>
 {% endblock %}

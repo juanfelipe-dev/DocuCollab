@@ -55,3 +55,18 @@ class DocumentSearchForm(forms.Form):
             'class': 'form-control'
         })
     )
+
+
+# Form for document comments with Bootstrap styling
+from .models import DocumentComment
+class DocumentCommentForm(forms.ModelForm):
+    class Meta:
+        model = DocumentComment
+        fields = ['text']
+        widgets = {
+            'text': forms.Textarea(attrs={
+                'class': 'form-control',
+                'placeholder': 'Add a comment...',
+                'rows': 3
+            })
+        }
