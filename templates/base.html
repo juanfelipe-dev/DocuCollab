@@ -9,7 +9,7 @@
     <title>{% block title %}DocuCollab - Collaborative Document Management{% endblock %}</title>
     {% block extra_css %}{% endblock %}
 </head>
-<body>
+<body class="{% block body_class %}{% endblock %}">
         <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="{% url 'docs:index' %}">DocuCollab</a>
