@@ -7,5 +7,8 @@ python manage.py migrate --noinput
 # Collect static files (if using static hosting)
 python manage.py collectstatic --noinput
 
+# Create default admin and user1 if not exist
+python create_default_users.py
+
 # Start the Django server (using gunicorn for production)
 gunicorn docucollab.wsgi:application --bind 0.0.0.0:10000 --workers 3
