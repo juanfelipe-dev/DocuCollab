@@ -11,4 +11,4 @@ python manage.py collectstatic --noinput
 python create_default_users.py
 
 # Start the Django server (using gunicorn for production)
-gunicorn docucollab.wsgi:application --bind 0.0.0.0:10000 --workers 3
+gunicorn docucollab.wsgi:application --bind 0.0.0.0:10000 --workers 1 --timeout 120
