@@ -14,10 +14,10 @@
 <form method="get" class="row g-2 align-items-end mb-4">
     {% csrf_token %}
     <div class="col-md-6">
-        {{ search_form.query|add_class:'form-control' }}
+        {{ search_form.query }}
     </div>
     <div class="col-md-4">
-        {{ search_form.file_type|add_class:'form-select' }}
+        {{ search_form.file_type }}
     </div>
     <div class="col-md-2">
         <button type="submit" class="btn btn-primary w-100">Search</button>
